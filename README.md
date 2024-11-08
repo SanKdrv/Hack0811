@@ -6,7 +6,7 @@
 ├── frontend
 ├── ...
 └── backend
-└── api
-    ├── ...
+    └── api
+        ├── ...
     ├── model
 ```
