@@ -51,5 +51,6 @@ def process_csv_and_calculate_f1(csv_file: str):
     plt.show()
 
 
-# Пример вызова функции с CSV файлом
-process_csv_and_calculate_f1('your_data.csv')
+if __name__ == '__main__':
+    # Пример вызова функции с CSV файлом
+    process_csv_and_calculate_f1('../../data/datasets/test_data/train_data_corrected.csv')
