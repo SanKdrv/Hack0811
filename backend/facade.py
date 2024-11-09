@@ -54,7 +54,4 @@ def get_model_info_by_serial_number(serial_number: str) -> str:
     api = SerialNumberAPI()
     model_info = api.get_model_by_serial(serial_number)
 
-    if model_info and "success" in model_info and model_info["success"]:
-        return model_info
-    else:
-        return "None"
+    return model_info
