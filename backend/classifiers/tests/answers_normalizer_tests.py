@@ -1,7 +1,6 @@
 import unittest
 from ..answers_noramalizer import AnswerNormalizer, NormTypes
 
-
 class TestAnswerNormalizer(unittest.TestCase):
 
     def test_normalize_equipment(self):
@@ -29,18 +28,22 @@ class TestAnswerNormalizer(unittest.TestCase):
         result = AnswerNormalizer.normalize("wi-fi модуль", NormTypes.Failure)
         self.assertEqual(result, "Wi-fi модуль")
 
-    def test_no_match_equipment(self):
-        # Проверяем случай, когда нет точного совпадения
-        result = AnswerNormalizer.normalize("монитор", NormTypes.Equipment)
-        # Ожидаем, что результат будет наиболее похож на один из существующих вариантов
-        self.assertIn(result, AnswerNormalizer._eq_types)
+    def test_no_match_with_threshold_equipment(self):
+        # Проверяем случай, когда нет подходящего совпадения и схожесть ниже порога
+        result = AnswerNormalizer.normalize("монитор", NormTypes.Equipment, threshold=80)
+        # Ожидаем, что результат будет None, так как схожесть ниже порога
+        self.assertIsNone(result)
 
-    def test_no_match_failure(self):
-        # Проверяем случай, когда нет точного совпадения для неисправности
-        result = AnswerNormalizer.normalize("экран", NormTypes.Failure)
-        # Ожидаем, что результат будет наиболее похож на один из существующих вариантов
-        self.assertIn(result, AnswerNormalizer._failure_points)
-
+    def test_no_match_with_threshold_failure_as_None(self):
+        # Проверяем случай, когда нет подходящего совпадения и схожесть ниже порога
+        result = AnswerNormalizer.normalize("None", NormTypes.Failure, threshold=80)
+        # Ожидаем, что результат будет None, так как схожесть ниже порога
+        self.assertIsNone(result)
+    def test_no_match_with_threshold_failure_as_Nan(self):
+        # Проверяем случай, когда нет подходящего совпадения и схожесть ниже порога
+        result = AnswerNormalizer.normalize("Nan", NormTypes.Failure, threshold=80)
+        # Ожидаем, что результат будет None, так как схожесть ниже порога
+        self.assertIsNone(result)
 
 if __name__ == '__main__':
     unittest.main()
