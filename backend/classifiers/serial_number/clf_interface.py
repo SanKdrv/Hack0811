@@ -7,7 +7,7 @@ class SerialNumberClassifierInterface(ABC):
     """
 
     @abstractmethod
-    def get_serial_number(self, text: str) -> str | None:
+    def get_serial_number(self, text: str) -> str:
         """
         Метод для извлечения первого серийного номера из текста.
 

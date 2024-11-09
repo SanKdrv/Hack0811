@@ -26,7 +26,7 @@ class RegularExtractor(SerialNumberClassifierInterface):
 
         return text
 
-    def get_serial_number(self, text: str) -> str | None:
+    def get_serial_number(self, text: str) -> str:
         """
         Извлекает первый серийный номер из текста.
 
@@ -44,4 +44,4 @@ class RegularExtractor(SerialNumberClassifierInterface):
         matches = re.findall(pattern, normalized_text)
         if matches:
             return matches[0]
-        return None
+        return "Уточнить"
