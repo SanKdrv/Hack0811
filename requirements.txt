@@ -1,0 +1,8 @@
+Flask==3.0.3
+matplotlib==3.9.2
+pandas==2.2.3
+Requests==2.32.3
+scikit_learn==1.5.2
+spacy==3.8.2
+torch==2.5.1
+transformers==4.46.2
