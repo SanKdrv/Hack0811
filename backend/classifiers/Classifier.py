@@ -1,8 +1,9 @@
 import requests
 import json
+from .serial_number.clf_interface import SerialNumberClassifierInterface
 
 
-class DeviceAnalysis:
+class DeviceAnalysis(SerialNumberClassifierInterface):
     """
     Класс для анализа устройств и определения их проблем.
 
