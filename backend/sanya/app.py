@@ -10,13 +10,12 @@ app = Flask(__name__)
 def hello_world():  # put application's code here
     return 'Hello World!'
 
+
 @app.route('/get_message')
 def get_message():
     # Здесь надо реализовать считывание сообщения
     message = "Привет, мир!"  # Примерное значение
     return {"message": message}
-
-
 
 
 @app.route('/send_message', methods=['POST'])
