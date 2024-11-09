@@ -4,6 +4,7 @@ import io
 import csv
 
 from backend.classifiers.nemo_clf import NemoClf
+from backend.facade import get_failure_point, get_device_type, get_serial_number
 from config import TEMPLATES_DIR
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=TEMPLATES_DIR, static_url_path="")
 
@@ -24,7 +25,7 @@ def send_to_server():
     return receive_from_server(data['text'])
 
 
-@app.route('/api/receive')
+@app.route('/api/receive', methods=['POST'])
 def receive_from_server(data):
     """
     Получает данные от клиента, анализирует их и возвращает результаты анализа.
@@ -35,13 +36,14 @@ def receive_from_server(data):
     :param data: JSON-объект с данными о проблеме устройства
     :return: JSON-ответ с результатами анализа
     """
-    analyzer = NemoClf()
+    failure_point = get_failure_point(data)
+    device_type = get_device_type(data)
+    serial_number = get_serial_number(data)
+    # point_of_failure = analyzer.get_failure_point(report_content=data)
+    # type_of_device = analyzer.get_device_type(report_content=data)
+    # serial_number = analyzer.get_serial_number(report_content=data)
 
-    point_of_failure = analyzer.get_failure_point(report_content=data)
-    type_of_device = analyzer.get_device_type(report_content=data)
-    serial_number = analyzer.get_serial_number(report_content=data)
-
-    return jsonify({"failure_point": point_of_failure, "device_type": type_of_device,
+    return jsonify({"failure_point": failure_point, "device_type": device_type,
                     "serial_number": serial_number})
 
 
