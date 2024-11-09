@@ -34,8 +34,8 @@ def get_device_type(text: str) -> str:
     :param text: Исходный текст для извлечения из него типа оборудования.
     :return: Тип оборудования или None, если тип оборудования не выявлен.
     """
-    # classifier = EquipmentDetector()
-    classifier = NemoClf()
+    classifier = EquipmentDetector()
+    # classifier = NemoClf()
     return classifier.get_device_type(text)
 
 

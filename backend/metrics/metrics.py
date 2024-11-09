@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.metrics import precision_recall_fscore_support
 import matplotlib.pyplot as plt
-from Hack0811.backend.facade import get_device_type, get_failure_point, get_serial_number  # Импортируем фасад
+from backend.facade import get_device_type, get_failure_point, get_serial_number  # Импортируем фасад
 
 
 # Основная функция для обработки данных из CSV и вычисления F1 метрики
@@ -35,6 +35,8 @@ def process_csv_and_calculate_f1(csv_file: str):
         pred_types.append(get_device_type(row['Тема'] + ' ' + row['Описание']))
         pred_failure_points.append(get_failure_point(row['Тема'] + ' ' + row['Описание']))
         pred_serial_numbers.append(get_serial_number(row['Тема'] + ' ' + row['Описание']))
+        print(f'Тип оборудования: Ожидаемое: {true_types[-1]} | Полученное {pred_types[-1]}')
+        print(f'Точка отказа: Ожидаемое: {true_failure_points[-1]} | Полученное {pred_failure_points[-1]}')
 
     # Вычисляем F1 метрику для каждого из столбцов
     f1_types = precision_recall_fscore_support(true_types, pred_types, average='macro')[2]
