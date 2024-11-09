@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, render_template
 import base64
 import io
 import csv
-import json
 
 from ...backend.classifiers.nemo_clf import NemoClf
 
@@ -18,7 +17,7 @@ def index():
 def send_to_server():
     """
     Получаем текст со странички
-    :return: Сообщение о том, что мы получили сообщение
+    :return: Результат отработки данных с сервера
     """
     data = request.get_json()
     return receive_from_server(data['text'])
