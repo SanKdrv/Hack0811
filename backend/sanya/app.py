@@ -1,38 +1,48 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import base64
 import io
 import csv
+import json
+
+from backend.classifiers.Classifier import DeviceAnalysis
 
 app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
+def index():
+    return render_template('index.html')
 
 
-@app.route('/get_message')
-def get_message():
-    # Здесь надо реализовать считывание сообщения
-    message = "Привет, мир!"  # Примерное значение
-    return {"message": message}
+@app.route('/api/send', methods=['POST'])
+def send_to_server():
+    """
+    Получаем текст со странички
+    :return: Сообщение о том, что мы получили сообщение
+    """
+    data = request.get_json()
+    return receive_from_server(data['text'])
 
 
-@app.route('/send_message', methods=['POST'])
-def send_message():
-    data = request.json
-    if not data:
-        return jsonify({"error": "Пожалуйста, отправьте данные в формате JSON"}), 400
+@app.route('/api/receive')
+def receive_from_server(data):
+    """
+    Получает данные от клиента, анализирует их и возвращает результаты анализа.
 
-    message = data.get('message')
-    if not message:
-        return jsonify({"error": "Необходимо передать поле 'message'"}), 400
+    Метод принимает POST-запрос с JSON-данными, содержащими информацию о проблеме устройства.
+    Возвращает JSON-ответ с результатами анализа.
 
-    # Здесь вы можете реализовать логику сохранения сообщения
-    # Например, записать его в файл или базу данных
-    print(f"Получено сообщение: {message}")
+    :param data: JSON-объект с данными о проблеме устройства
+    :return: JSON-ответ с результатами анализа
+    """
+    analyzer = DeviceAnalysis()
 
-    return jsonify({"status": "OK", "message": f"Сообщение '{message}' успешно получено"}), 200
+    point_of_failure = analyzer.get_point_of_failure(report_content=data)
+    type_of_device = analyzer.get_type_of_device(report_content=data)
+    serial_number = analyzer.get_serial_number(report_content=data)
+
+    return jsonify({"point_of_failure": point_of_failure, "type_of_device": type_of_device,
+                    "serial_number": serial_number})
 
 
 @app.route('/read_csv_base64')
