@@ -2,6 +2,11 @@ document.getElementById("sendButton").addEventListener("click", sendMessage);
 document.getElementById("messageInputTheme").addEventListener("keydown", function (event) { if (event.key === "Enter") sendMessage(); });
 document.getElementById("messageInputText").addEventListener("keydown", function (event) { if (event.key === "Enter") sendMessage(); });
 
+
+var loc = window.location.pathname;
+var dir = loc.substring(0, loc.lastIndexOf('/'));
+console.log(dir);
+
 function checkEnter(event) {
     if (event.key === "Enter") {
         sendMessage();
@@ -47,20 +52,20 @@ function sendMessage() {
             я буду ожидать от вас json такой структуры:
             {
                 type: smth,
-                dot: smth,
-                ser_num: smth
+                failure_point: smth,
+                serial_number: smth
             }
             отправляете те данные, которые есть. Если чего-то нет, то я обрабатываю это
         */
        console.log(data);
-        if (data.type && data.dot && data.ser_num) {
-            const msg = data.type + " " +  data.dot + " " + data.ser_num;
+        if (data.type_of_device && data.failure_point && data.serial_number) {
+            const msg = data.type_of_device + " " +  data.failure_point + " " + data.serial_number;
             addMessage("Все данные есть!", msg, "bot");
         } else {
             let msg = "";
-            if (!data.type) msg += "Тип оборудования, ";
-            if (!data.dot) msg += "Точка отказа, ";
-            if (!data.ser_num) msg += "Серийный номер";
+            if (!data.type_of_device) msg += "Тип оборудования, ";
+            if (!data.failure_point) msg += "Точка отказа, ";
+            if (!data.serial_number) msg += "Серийный номер";
 
             addMessage("Есть отсутствующие данные", msg, "bot");
         }
@@ -82,3 +87,18 @@ function addMessage(theme, text, sender) {
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
+function sendToServer() {
+            const inputText = document.getElementById('inputField').value;
+            fetch('/api/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: inputText }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('outputField').value = JSON.stringify(data.value)
+            });
+        }
