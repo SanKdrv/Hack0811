@@ -1,6 +1,16 @@
 import requests
 import json
+
+from .serial_number.regular_extractor import RegularExtractor
 from .serial_number.clf_interface import SerialNumberClassifierInterface
+
+
+def serial_numbers_matching(report_content: str, llm_extracted_serial_number: str) -> bool:
+    reg_extractor = RegularExtractor()
+
+    if reg_extractor.get_serial_number(report_content) == llm_extracted_serial_number:
+        return True
+    return False
 
 
 class NemoClf(SerialNumberClassifierInterface):
@@ -13,7 +23,7 @@ class NemoClf(SerialNumberClassifierInterface):
 
     def __init__(self, url: str = "http://127.0.0.1:1234/v1/chat/completions"):
         """
-        Инициализация класса DeviceAnalysis.
+        Инициализация класса NemoClf.
 
         Args:
             url (str): URL API для отправки запросов (по умолчанию "http://127.0.0.1:1234/v1/chat/completions").
@@ -121,6 +131,7 @@ class NemoClf(SerialNumberClassifierInterface):
 
         response = requests.post(self.url, headers=headers, data=json.dumps(data), stream=True)
         res = json.loads(response.text)['choices'][0]['message']['content']
-        if res == 'Укажите серийный номер явно':
-            return None
-        return res
+
+        if serial_numbers_matching(report_content, res):
+            return res
+        return None
