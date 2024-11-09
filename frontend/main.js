@@ -16,7 +16,7 @@ function showStatus(text) {
 }
 
 function isEmptyField(text) {
-    return text.includes("Укажите") || text == "None";
+    return text.includes("Уточнить") || text == "None";
 }
 
 function sendMessage() {
