@@ -60,18 +60,30 @@ function sendMessage() {
        console.log(data);
 
         if (!isEmptyField(data.device_type) && !isEmptyField(data.failure_point) && !isEmptyField(data.serial_number)) {
-            const msg = data.device_type + ", " +  data.failure_point + ", " + data.serial_number;
+            let msg = `
+Здравствуйте,
+
+Ваше устройство: ${data.device_type}
+Точка неисправности: ${data.failure_point}
+Серийный номер: ${data.serial_number}
+
+Ваша заявка принята в работу!
+
+С уважением,
+Служба поддержки компании «Сила»
+`;
+
             addMessage("Все данные есть!", msg, "bot");
         } else {
-            let msg = "";
-            if (isEmptyField(data.device_type)) msg += "Тип оборудования, ";
-            if (isEmptyField(data.failure_point)) msg += "Точка отказа, ";
-            if (isEmptyField(data.serial_number)) msg += "Серийный номер";
+            let msg = "Здравствуйте! Пожалуйста, уточните следующие данные для продолжения обработки заявки:\n";
+            if (isEmptyField(data.device_type)) msg += "\tТип оборудования\n";
+            if (isEmptyField(data.failure_point)) msg += "\tТочка отказа\n";
+            if (isEmptyField(data.serial_number)) msg += "\tСерийный номер\n";
 
-            addMessage("Есть отсутствующие данные. Пожалуйста, предоставьте следующие данные: ", msg, "bot");
+            addMessage("Не хватает данных.", msg, "bot");
         }
     })
-    .catch(error => {
+    .catch(error => {1
         console.error('Ошибка:', error);
         addMessage("Произошла ошибка при получении ответа от сервера. Проверьте подключение или обратитесь к разработчику.", "", "bot");
     });
