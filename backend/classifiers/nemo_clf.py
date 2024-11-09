@@ -121,8 +121,9 @@ class NemoClf(SerialNumberClassifierInterface):
                             'информацию и определить ПЕРВЫЙ ПОПАВШИЙСЯ СЕРИЙНЫЙ НОМЕР, из всех указанных в письме. '
                             'Вот как могут выглядеть серийные номера: [С222090774, D252030011, CKM00194300973].  '
                             'Запомните: НАЙДЕННЫЙ СЕРИЙНЫЙ НОМЕР НУЖНО ПЕРЕВЕСТИ В ВЕРХНИЙ РЕГИСТР И НА ЛАТИНИЦУ. '
-                            'Пример вашей работы: вы получаете "сн123421242", вы выводите "SN123421242". Если '
-                            'серийный номер не найден, нужно вывести "Укажите серийный номер явно" И НИЧЕГО БОЛЬШЕ.'},
+                            'Пример вашей работы: вы получаете "сн123421242", вы выводите "SN123421242", вы получаете '
+                            '"С223013256", вы выводите "S223013256". Если серийный номер не найден, нужно вывести '
+                            '"Укажите серийный номер явно" И НИЧЕГО БОЛЬШЕ.'},
                 {"role": "user", "content": report_content}
             ],
             "temperature": 0.7,
@@ -133,6 +134,8 @@ class NemoClf(SerialNumberClassifierInterface):
         response = requests.post(self.url, headers=headers, data=json.dumps(data), stream=True)
         res = json.loads(response.text)['choices'][0]['message']['content']
 
-        if serial_numbers_matching(report_content, res):
-            return res
-        return None
+        return res
+
+        # if serial_numbers_matching(report_content, res):
+        #     return res
+        # return None
