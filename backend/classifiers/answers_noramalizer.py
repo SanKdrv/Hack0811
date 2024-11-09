@@ -19,7 +19,7 @@ class AnswerNormalizer:
     ]
 
     @staticmethod
-    def normalize(ai_answer: str, norm_type: NormTypes):
+    def normalize(ai_answer: str, norm_type: NormTypes) -> str:
         """
         Находит наиболее подходящий вариант из списка возможных ответов.
 
@@ -31,4 +31,4 @@ class AnswerNormalizer:
             best_match, score = process.extractOne(ai_answer, AnswerNormalizer._eq_types, scorer=fuzz.ratio)
         elif norm_type == NormTypes.Failure:
             best_match, score = process.extractOne(ai_answer, AnswerNormalizer._failure_points, scorer=fuzz.ratio)
-        return best_match
+        return str(best_match)
