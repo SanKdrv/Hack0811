@@ -42,7 +42,7 @@ def get_device_type(text: str) -> str:
     return AnswerNormalizer.normalize(device_type, norm_type=NormTypes.Equipment)  # можно поэксперименитровать с поргом
 
 
-def get_model_info_by_serial_number(serial_number: str) -> dict | None:
+def get_model_info_by_serial_number(serial_number: str) -> str:
     """
     Получение информации о модели по серийному номеру.
     Структура возвращаемого значения:
@@ -57,4 +57,4 @@ def get_model_info_by_serial_number(serial_number: str) -> dict | None:
     if model_info and "success" in model_info and model_info["success"]:
         return model_info
     else:
-        return None
+        return "None"
