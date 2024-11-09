@@ -2,7 +2,7 @@ import re
 from clf_interface import SerialNumberClassifierInterface
 
 
-class SerialNumberExtractor(SerialNumberClassifierInterface):
+class RegularExtractor(SerialNumberClassifierInterface):
     def __init__(self):
         # Задание карты замены для русских букв на латинские
         self._replacement_map = {
@@ -26,7 +26,7 @@ class SerialNumberExtractor(SerialNumberClassifierInterface):
 
         return text
 
-    def extract_serial_number_from_text(self, text: str) -> str | None:
+    def get_serial_number(self, text: str) -> str | None:
         """
         Извлекает первый серийный номер из текста.
 

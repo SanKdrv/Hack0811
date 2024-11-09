@@ -1,5 +1,5 @@
 import unittest
-from extract_serial_number import SerialNumberExtractor  # Импортируем класс
+from regular_extractor import RegularExtractor  # Импортируем класс
 
 class TestSerialNumberExtractor(unittest.TestCase):
     def setUp(self):
@@ -7,7 +7,7 @@ class TestSerialNumberExtractor(unittest.TestCase):
         Настройка, выполняемая перед каждым тестом.
         Создаем экземпляр обработчика.
         """
-        self.extractor = SerialNumberExtractor()
+        self.extractor = RegularExtractor()
 
     def test_simple_serial_number(self):
         """
