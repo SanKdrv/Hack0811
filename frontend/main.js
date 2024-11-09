@@ -49,7 +49,7 @@ async function sendMessage() {
         }
         return response.json();
     })
-    .then(data => { 
+    .then(data => {
         if (!isEmptyField(data.device_type) && !isEmptyField(data.failure_point) && !isEmptyField(data.serial_number)) {
             const msg = `
             Здравствуйте! <br>
@@ -106,7 +106,7 @@ async function sendMessage() {
                 const msg = "К сожалению, я не смог найти информацию о вашем товаре в нашем каталоге.";
                 addMessage("Данные не найдены!", msg, "bot");
             }
-        }).catch(error => {1
+        }).catch(error => {
             console.error('Ошибка:', error);
             addMessage("Произошла ошибка при получении ответа от сервера при запросе по серийному номеру. Проверьте подключение или обратитесь к разработчику.", "", "bot");
         });

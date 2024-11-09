@@ -56,7 +56,7 @@ class SerialNumberAPI:
         )
         logging.info(f"Логирование настроено с уровнем: {logging.getLevelName(log_level)}")
 
-    def get_model_by_serial(self, serial_number: str, retries=0) -> str | None:
+    def get_model_by_serial(self, serial_number: str, retries=0) -> dict | None:
         """
         Получить информацию о модели по серийному номеру с учетом повторных попыток в случае ошибок.
 
@@ -77,10 +77,10 @@ class SerialNumberAPI:
 
             if response.status_code == 200:
                 logging.info(f"Запрос успешен. Ответ получен для серийного номера: {serial_number}")
-                return str(json.loads(response.text))  # Возвращаем тело ответа в формате JSON
+                return json.loads(response.text)  # Возвращаем тело ответа в формате JSON
             else:
                 logging.warning(f"Ошибка: получен статус {response.status_code} для серийного номера: {serial_number}")
-                return "None"
+                return None
 
         except requests.Timeout:
             # В случае тайм-аута выполняем повторную попытку
@@ -97,7 +97,7 @@ class SerialNumberAPI:
             return self.get_model_by_serial(serial_number, retries + 1)
         else:
             logging.error(f"Превышено количество попыток для серийного номера: {serial_number}")
-            return "None"
+            return None
 
 
 # Пример использования

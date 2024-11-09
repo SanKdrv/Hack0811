@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, render_template, make_response, send_
 import io
 import csv
 
+import json
+
 import pandas as pd
 
 # from ..backend.classifiers.nemo_clf import NemoClf
@@ -23,7 +25,7 @@ def send_to_server():
     :return: Результат отработки данных с сервера
     """
     data = request.get_json()
-    return receive_from_server(data['text'])
+    return receive_from_server(data['msg'])
 
 
 @app.route('/api/receive', methods=['POST'])
@@ -89,7 +91,7 @@ def process_csv():
     return response
 
 @app.route('/get_model_info', methods=['POST'])
-def get_model_info(data):
+def get_model_info():
     """
     Получает серийный номер и возвращает информацию о модели.
 
@@ -98,15 +100,22 @@ def get_model_info(data):
     'ServiceDesk': 17, 'Warrantydue': '2027-02-09', 'WarrantyType': 'Базовая', 'FormattedWarantyDue': '09.02.2027'}
 
     :param data: JSON-объект с серийным номером
-    :return: JSON-ответ с результатами анализа
+    :return: строка с результатами анализа
     """
-    data = request.get_json()
-
-    serial_number = get_serial_number(data)
-
+    json_data = request.get_json()
+    serial_number = get_serial_number(json_data['data'])
     model_info = get_model_info_by_serial_number(serial_number)
 
-    return jsonify({"model_info": model_info})
+    if model_info is None or len(list(model_info.keys())) < 3:
+        return jsonify({'model_info': 'None'})
+    res = '<br>'
+    for key in list(model_info.keys())[1:]:
+        if key == 'msg':
+            res += '&nbsp;&nbsp;&nbsp;&nbsp;Статус гарантии: ' + str(model_info[key]) + ' <br>'
+        else:
+            res += '&nbsp;&nbsp;&nbsp;&nbsp;' + str(key) + ': ' + str(model_info[key]) + ' <br>'
+
+    return jsonify({'model_info': res})
 
 
 

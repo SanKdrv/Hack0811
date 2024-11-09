@@ -3,6 +3,7 @@ from classifiers.nemo_clf import NemoClf
 from classifiers.serial_number.serial_number_api import SerialNumberAPI
 from classifiers.equipment_type.lemma_classifier import EquipmentDetector
 from classifiers.answers_noramalizer import AnswerNormalizer, NormTypes
+# Для метрики ставим точки перед classifiers
 
 
 def get_serial_number(text: str) -> str:
@@ -26,7 +27,7 @@ def get_failure_point(text: str) -> str:
     """
     classifier = NemoClf()
     failure_point = classifier.get_failure_point(text)
-    return AnswerNormalizer.normalize(failure_point, norm_type=NormTypes.Failure) # можно поэксперименитровать с поргом
+    return AnswerNormalizer.normalize(failure_point, norm_type=NormTypes.Failure)  # можно поэксперименитровать с поргом
 
 
 def get_device_type(text: str) -> str:
@@ -36,13 +37,13 @@ def get_device_type(text: str) -> str:
     :param text: Исходный текст для извлечения из него типа оборудования.
     :return: Тип оборудования или None, если тип оборудования не выявлен.
     """
-    classifier = EquipmentDetector()
-    # classifier = NemoClf()
+    # classifier = EquipmentDetector()
+    classifier = NemoClf()
     device_type = classifier.get_device_type(text)
     return AnswerNormalizer.normalize(device_type, norm_type=NormTypes.Equipment)  # можно поэксперименитровать с поргом
 
 
-def get_model_info_by_serial_number(serial_number: str) -> str:
+def get_model_info_by_serial_number(serial_number: str) -> dict:
     """
     Получение информации о модели по серийному номеру.
     Структура возвращаемого значения:

@@ -68,7 +68,7 @@ class NemoClf(SerialNumberClassifierInterface):
         }
 
         response = requests.post(self.url, headers=headers, data=json.dumps(data), stream=True)
-
+        print(json.loads(response.text))
         return json.loads(response.text)['choices'][0]['message']['content']
 
     def get_device_type(self, report_content: str) -> str:
