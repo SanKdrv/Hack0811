@@ -2,7 +2,6 @@ document.getElementById("sendButton").addEventListener("click", sendMessage);
 document.getElementById("messageInputTheme").addEventListener("keydown", function (event) { if (event.key === "Enter") sendMessage(); });
 document.getElementById("messageInputText").addEventListener("keydown", function (event) { if (event.key === "Enter") sendMessage(); });
 
-
 function checkEnter(event) {
     if (event.key === "Enter") {
         sendMessage();
@@ -14,6 +13,10 @@ function showStatus(text) {
     const statusMessage = document.getElementById("statusMessage");
     statusMessage.textContent = message;
     statusMessage.style.color = type === "success" ? "green" : "red";
+}
+
+function isEmptyField(text) {
+    return text.includes("Укажите") || text == "None";
 }
 
 function sendMessage() {
@@ -43,25 +46,26 @@ function sendMessage() {
         }
         return response.json();
     })
-    .then(data => {
+    .then(data => { 
         /*
             я буду ожидать от вас json такой структуры:
             {
-                type: smth,
                 failure_point: smth,
+                device_type: smth,
                 serial_number: smth
             }
-            отправляете те данные, которые есть. Если чего-то нет, то я обрабатываю это
+            данные не заполены: ответ начинается со слов Укажите, либо в поле None
         */
        console.log(data);
-        if (data.type_of_device && data.failure_point && data.serial_number) {
-            const msg = data.type_of_device + " " +  data.failure_point + " " + data.serial_number;
+
+        if (isEmptyField(data.device_type) && isEmptyField(data.failure_point) && isEmptyField(data.serial_number)) {
+            const msg = data.device_type + " " +  data.failure_point + " " + data.serial_number;
             addMessage("Все данные есть!", msg, "bot");
         } else {
             let msg = "";
-            if (!data.type_of_device) msg += "Тип оборудования, ";
-            if (!data.failure_point) msg += "Точка отказа, ";
-            if (!data.serial_number) msg += "Серийный номер";
+            if (isEmptyField(data.device_type)) msg += "Тип оборудования, ";
+            if (isEmptyField(data.failure_point)) msg += "Точка отказа, ";
+            if (isEmptyField(data.serial_number)) msg += "Серийный номер";
 
             addMessage("Есть отсутствующие данные", msg, "bot");
         }
@@ -83,18 +87,3 @@ function addMessage(theme, text, sender) {
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
-function sendToServer() {
-            const inputText = document.getElementById('inputField').value;
-            fetch('/api/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ text: inputText }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('outputField').value = JSON.stringify(data.value)
-            });
-        }
