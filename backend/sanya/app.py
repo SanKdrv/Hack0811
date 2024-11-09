@@ -4,7 +4,7 @@ import io
 import csv
 import json
 
-from backend.classifiers.Classifier import DeviceAnalysis
+from backend.classifiers.nemo_clf import NemoClf
 
 app = Flask(__name__)
 
@@ -35,13 +35,13 @@ def receive_from_server(data):
     :param data: JSON-объект с данными о проблеме устройства
     :return: JSON-ответ с результатами анализа
     """
-    analyzer = DeviceAnalysis()
+    analyzer = NemoClf()
 
-    point_of_failure = analyzer.get_point_of_failure(report_content=data)
-    type_of_device = analyzer.get_type_of_device(report_content=data)
+    point_of_failure = analyzer.get_failure_point(report_content=data)
+    type_of_device = analyzer.get_device_type(report_content=data)
     serial_number = analyzer.get_serial_number(report_content=data)
 
-    return jsonify({"point_of_failure": point_of_failure, "type_of_device": type_of_device,
+    return jsonify({"failure_point": point_of_failure, "device_type": type_of_device,
                     "serial_number": serial_number})
 
 
