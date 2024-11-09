@@ -21,7 +21,7 @@ class EquipmentDetector:
         """
         self._equipment_keywords = ["сервер", "ноутбук", "схд"]  # Ключевые леммы для идентификации оборудования
 
-    def detect_equipment(self, text: str) -> str | None:
+    def get_device_type(self, text: str) -> str | None:
         """
         Метод для обнаружения упоминания оборудования в тексте.
 

@@ -2,6 +2,7 @@ from backend.classifiers.serial_number.regular_extractor import RegularExtractor
 from .classifiers.nemo_clf import NemoClf
 from .classifiers.serial_number.serial_number_api import SerialNumberAPI
 
+from .classifiers.equipment_type.lemma_classifier import EquipmentDetector
 
 def get_serial_number(text: str) -> str | None:
     """
@@ -33,6 +34,7 @@ def get_device_type(text: str) -> str:
     :param text: Исходный текст для извлечения из него типа оборудования.
     :return: Тип оборудования или None, если тип оборудования не выявлен.
     """
+    # classifier = EquipmentDetector()
     classifier = NemoClf()
     return classifier.get_device_type(text)
 
