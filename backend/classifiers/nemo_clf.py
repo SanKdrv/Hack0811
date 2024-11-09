@@ -3,7 +3,8 @@ import json
 
 from .serial_number.regular_extractor import RegularExtractor
 from .serial_number.clf_interface import SerialNumberClassifierInterface
-from config import CLF_ADDRESS
+# from ....config import CLF_ADDRESS
+from Hack0811.config import CLF_ADDRESS
 
 
 def serial_numbers_matching(report_content: str, llm_extracted_serial_number: str) -> bool:
