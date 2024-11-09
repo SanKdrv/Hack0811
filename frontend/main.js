@@ -33,15 +33,16 @@ function sendMessage() {
 
     const message = theme + " " + text;
 
-    fetch('/api/gptresponse', {
+    fetch('/api/send', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ msg: message })
+        body: JSON.stringify({ text: message })
     })
     .then(response => {
         if (!response.ok) {
+            console.log(response);
             throw new Error("Сервер вернул ошибку");
         }
         return response.json();
@@ -58,8 +59,8 @@ function sendMessage() {
         */
        console.log(data);
 
-        if (isEmptyField(data.device_type) && isEmptyField(data.failure_point) && isEmptyField(data.serial_number)) {
-            const msg = data.device_type + " " +  data.failure_point + " " + data.serial_number;
+        if (!isEmptyField(data.device_type) && !isEmptyField(data.failure_point) && !isEmptyField(data.serial_number)) {
+            const msg = data.device_type + ", " +  data.failure_point + ", " + data.serial_number;
             addMessage("Все данные есть!", msg, "bot");
         } else {
             let msg = "";
@@ -67,7 +68,7 @@ function sendMessage() {
             if (isEmptyField(data.failure_point)) msg += "Точка отказа, ";
             if (isEmptyField(data.serial_number)) msg += "Серийный номер";
 
-            addMessage("Есть отсутствующие данные", msg, "bot");
+            addMessage("Есть отсутствующие данные. Пожалуйста, предоставьте следующие данные: ", msg, "bot");
         }
     })
     .catch(error => {
