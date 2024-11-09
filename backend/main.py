@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify, render_template
-import base64
+from flask import Flask, request, jsonify, render_template, make_response, send_file
 import io
 import csv
+
+import pandas as pd
 
 from backend.classifiers.nemo_clf import NemoClf
 from backend.facade import get_failure_point, get_device_type, get_serial_number
@@ -47,52 +48,45 @@ def receive_from_server(data):
                     "serial_number": serial_number})
 
 
-@app.route('/read_csv_base64')
-def read_csv_base64():
-    csv_data = request.args.get('csv_data')
-    if not csv_data:
-        return jsonify({"error": "Пожалуйста, передайте параметр csv_data в формате base64"}), 400
+# TODO: fix
+@app.route('/process_csv', methods=['POST'])
+def process_csv():
+    """
+    Получает csv файл из запроса и обрабатывается моделью.
 
-    try:
-        decoded_bytes = base64.b64decode(csv_data)
-        csv_string = decoded_bytes.decode('utf-8')
+    Метод принимает POST-запрос с JSON-данными, в которых находится csv-файл,
+     содержащий информацию о проблемах устройств.
+    Возвращает JSON-ответ в котором csv-файл с результатами анализа.
 
-        # Читаем CSV из строки
-        csv_reader = csv.reader(io.StringIO(csv_string))
-        data = list(csv_reader)
+    :param data: JSON-объект с csv файлом, в котором находятся данныме о проблемах устройств
+    :return: JSON-ответ с csv файлом, в котором находятся результатамы анализа
+    """
+    # Получаем CSV-файл из запроса
+    csv_file = request.files['csv_file']
 
-        return jsonify({"data": data})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # Читаем CSV-файл в DataFrame pandas
+    df = pd.read_csv(csv_file)
 
+    # Пробегаем по каждой строке и выводим ячейки
+    processed_data = []
+    for _, row in df.iterrows():
+        processed_row = []
+        for cell in row:
+            processed_row.append(str(cell))
+        processed_data.append(processed_row)
 
-@app.route('/return_csv_base64', methods=['POST'])
-def return_csv_base64():
-    data = request.json
-    if not data:
-        return jsonify({"error": "Пожалуйста, отправьте данные в формате JSON"}), 400
+    # Создаем новый DataFrame с обработанными данными
+    new_df = pd.DataFrame(processed_data, columns=df.columns)
 
-    csv_content = data.get('csv_content')
-    if not csv_content:
-        return jsonify({"error": "Необходимо передать поле 'csv_content'"}), 400
+    # Сохраняем результат обратно в CSV
+    output_buffer = io.StringIO()
+    new_df.to_csv(output_buffer, index=False)
+    output_buffer.seek(0)
 
-    try:
-        # Создаем объект StringIO для хранения CSV-данных
-        csv_io = io.StringIO(csv_content)
-
-        # Читаем CSV из StringIO
-        csv_reader = csv.reader(csv_io)
-        data = list(csv_reader)
-
-        # Конвертируем список в строку
-        csv_string = '\n'.join([','.join(row) for row in data])
-
-        # Кодируем в base64
-        encoded_csv = base64.b64encode(csv_string.encode('utf-8')).decode('utf-8')
-
-        return jsonify({"csv_base64": encoded_csv})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # Отправляем ответ клиенту
+    response = make_response(send_file(output_buffer, mimetype='text/csv'))
+    response.headers["Content-Disposition"] = f"attachment; filename=processed_{request.files['csv_file'].filename}"
+    return response
 
 
 if __name__ == '__main__':
