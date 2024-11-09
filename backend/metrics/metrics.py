@@ -1,11 +1,17 @@
 import pandas as pd
 from sklearn.metrics import precision_recall_fscore_support
 import matplotlib.pyplot as plt
-from ..facade import get_device_type, get_failure_point, get_serial_number  # Импортируем фасад
+from Hack0811.backend.facade import get_device_type, get_failure_point, get_serial_number  # Импортируем фасад
 
 
 # Основная функция для обработки данных из CSV и вычисления F1 метрики
 def process_csv_and_calculate_f1(csv_file: str):
+    """
+    Высчитывает и строит график метрики f1-score для типа оборудования, точки отказа и серийного номера по отдельности.
+    :param csv_file: Путь до файла csv с шапкой "index,Тема,Описание,Тип оборудования,Точка отказа,Серийный номер",
+     данные из которого будут использоваться для сравнения.
+    :return:
+    """
     # Загружаем CSV файл
     df = pd.read_csv(csv_file)
 
@@ -51,5 +57,6 @@ def process_csv_and_calculate_f1(csv_file: str):
     plt.show()
 
 
-# Пример вызова функции с CSV файлом
-process_csv_and_calculate_f1('your_data.csv')
+if __name__ == '__main__':
+    # Пример вызова функции с CSV файлом
+    process_csv_and_calculate_f1('../../data/datasets/test_data/train_data_corrected.csv')

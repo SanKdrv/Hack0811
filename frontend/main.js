@@ -15,6 +15,10 @@ function showStatus(text) {
     statusMessage.style.color = type === "success" ? "green" : "red";
 }
 
+function isEmptyField(text) {
+    return text.includes("Укажите") || text == "None";
+}
+
 function sendMessage() {
     const inputTheme = document.getElementById("messageInputTheme");
     const inputText = document.getElementById("messageInputText");
@@ -29,40 +33,42 @@ function sendMessage() {
 
     const message = theme + " " + text;
 
-    fetch('/api/gptresponse', {
+    fetch('/api/send', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ msg: message })
+        body: JSON.stringify({ text: message })
     })
     .then(response => {
         if (!response.ok) {
+            console.log(response);
             throw new Error("Сервер вернул ошибку");
         }
         return response.json();
     })
-    .then(data => {
+    .then(data => { 
         /*
             я буду ожидать от вас json такой структуры:
             {
-                type: smth,
-                dot: smth,
-                ser_num: smth
+                failure_point: smth,
+                device_type: smth,
+                serial_number: smth
             }
-            отправляете те данные, которые есть. Если чего-то нет, то я обрабатываю это
+            данные не заполены: ответ начинается со слов Укажите, либо в поле None
         */
        console.log(data);
-        if (data.type && data.dot && data.ser_num) {
-            const msg = data.type + " " +  data.dot + " " + data.ser_num;
+
+        if (!isEmptyField(data.device_type) && !isEmptyField(data.failure_point) && !isEmptyField(data.serial_number)) {
+            const msg = data.device_type + ", " +  data.failure_point + ", " + data.serial_number;
             addMessage("Все данные есть!", msg, "bot");
         } else {
             let msg = "";
-            if (!data.type) msg += "Тип оборудования, ";
-            if (!data.dot) msg += "Точка отказа, ";
-            if (!data.ser_num) msg += "Серийный номер";
+            if (isEmptyField(data.device_type)) msg += "Тип оборудования, ";
+            if (isEmptyField(data.failure_point)) msg += "Точка отказа, ";
+            if (isEmptyField(data.serial_number)) msg += "Серийный номер";
 
-            addMessage("Есть отсутствующие данные", msg, "bot");
+            addMessage("Есть отсутствующие данные. Пожалуйста, предоставьте следующие данные: ", msg, "bot");
         }
     })
     .catch(error => {

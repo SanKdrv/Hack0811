@@ -3,6 +3,7 @@ import json
 
 from .serial_number.regular_extractor import RegularExtractor
 from .serial_number.clf_interface import SerialNumberClassifierInterface
+from config import CLF_ADDRESS
 
 
 def serial_numbers_matching(report_content: str, llm_extracted_serial_number: str) -> bool:
@@ -15,18 +16,18 @@ def serial_numbers_matching(report_content: str, llm_extracted_serial_number: st
 
 class NemoClf(SerialNumberClassifierInterface):
     """
-    Класс для анализа устройств и определения их проблем.
+    Класс для анализа устройств и определения их проблем. Обращается к нейросети Vikhr-Nemo-12B-Instruct-R-21-09-24-GGUF.
 
     Attributes:
-        url (str): URL API для отправки запросов (по умолчанию "http://127.0.0.1:1234/v1/chat/completions").
+        url (str): URL API для отправки запросов (берётся из config.py).
     """
 
-    def __init__(self, url: str = "http://127.0.0.1:1234/v1/chat/completions"):
+    def __init__(self, url: str = CLF_ADDRESS):
         """
         Инициализация класса NemoClf.
 
         Args:
-            url (str): URL API для отправки запросов (по умолчанию "http://127.0.0.1:1234/v1/chat/completions").
+            url (str): URL API для отправки запросов (берётся из config.py).
         """
         self.url = url
 
@@ -102,14 +103,14 @@ class NemoClf(SerialNumberClassifierInterface):
 
     def get_serial_number(self, report_content: str) -> str | None:
         """
-            Функция анализирует предоставленный текст и определяет серийный номер.
+        Функция анализирует предоставленный текст и определяет серийный номер.
 
-            Args:
-            report_content (str): Текст для анализа (Тема + Содержимое).
+        Args:
+        report_content (str): Текст для анализа (Тема + Содержимое).
 
-            Returns:
-            str: Определенный серийный номер.
-            """
+        Returns:
+        str: Определенный серийный номер.
+        """
 
         headers = {"Content-Type": "application/json"}
         data = {
@@ -120,8 +121,9 @@ class NemoClf(SerialNumberClassifierInterface):
                             'информацию и определить ПЕРВЫЙ ПОПАВШИЙСЯ СЕРИЙНЫЙ НОМЕР, из всех указанных в письме. '
                             'Вот как могут выглядеть серийные номера: [С222090774, D252030011, CKM00194300973].  '
                             'Запомните: НАЙДЕННЫЙ СЕРИЙНЫЙ НОМЕР НУЖНО ПЕРЕВЕСТИ В ВЕРХНИЙ РЕГИСТР И НА ЛАТИНИЦУ. '
-                            'Пример вашей работы: вы получаете "сн123421242", вы выводите "SN123421242". Если '
-                            'серийный номер не найден, нужно вывести "Укажите серийный номер явно" И НИЧЕГО БОЛЬШЕ.'},
+                            'Пример вашей работы: вы получаете "сн123421242", вы выводите "SN123421242", вы получаете '
+                            '"С223013256", вы выводите "S223013256". Если серийный номер не найден, нужно вывести '
+                            '"Укажите серийный номер явно" И НИЧЕГО БОЛЬШЕ.'},
                 {"role": "user", "content": report_content}
             ],
             "temperature": 0.7,
@@ -132,6 +134,8 @@ class NemoClf(SerialNumberClassifierInterface):
         response = requests.post(self.url, headers=headers, data=json.dumps(data), stream=True)
         res = json.loads(response.text)['choices'][0]['message']['content']
 
-        if serial_numbers_matching(report_content, res):
-            return res
-        return None
+        return res
+
+        # if serial_numbers_matching(report_content, res):
+        #     return res
+        # return None
