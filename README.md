@@ -85,7 +85,7 @@ Hack0811
 
 3. Установите зависимости:
 
-`pip install -r requirements.txt`
+    `pip install -r requirements.txt`
 
 4. Запустите сервер:
 
