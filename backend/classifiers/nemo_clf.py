@@ -15,7 +15,7 @@ def serial_numbers_matching(report_content: str, llm_extracted_serial_number: st
 
 class NemoClf(SerialNumberClassifierInterface):
     """
-    Класс для анализа устройств и определения их проблем.
+    Класс для анализа устройств и определения их проблем. Обращается к нейросети Vikhr-Nemo-12B-Instruct-R-21-09-24-GGUF.
 
     Attributes:
         url (str): URL API для отправки запросов (по умолчанию "http://127.0.0.1:1234/v1/chat/completions").
@@ -102,14 +102,14 @@ class NemoClf(SerialNumberClassifierInterface):
 
     def get_serial_number(self, report_content: str) -> str | None:
         """
-            Функция анализирует предоставленный текст и определяет серийный номер.
+        Функция анализирует предоставленный текст и определяет серийный номер.
 
-            Args:
-            report_content (str): Текст для анализа (Тема + Содержимое).
+        Args:
+        report_content (str): Текст для анализа (Тема + Содержимое).
 
-            Returns:
-            str: Определенный серийный номер.
-            """
+        Returns:
+        str: Определенный серийный номер.
+        """
 
         headers = {"Content-Type": "application/json"}
         data = {
