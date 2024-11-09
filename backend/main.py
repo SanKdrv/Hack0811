@@ -4,9 +4,9 @@ import csv
 
 import pandas as pd
 
-from backend.classifiers.nemo_clf import NemoClf
-from backend.facade import get_failure_point, get_device_type, get_serial_number
-from config import TEMPLATES_DIR
+from ..backend.classifiers.nemo_clf import NemoClf
+from ..backend.facade import get_failure_point, get_device_type, get_serial_number, get_model_info_by_serial_number
+from ..config import TEMPLATES_DIR
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=TEMPLATES_DIR, static_url_path="")
 
 
@@ -87,6 +87,59 @@ def process_csv():
     response = make_response(send_file(output_buffer, mimetype='text/csv'))
     response.headers["Content-Disposition"] = f"attachment; filename=processed_{request.files['csv_file'].filename}"
     return response
+
+@app.route('/get_model_info', methods=['POST'])
+def get_model_info(data):
+    """
+    Получает серийный номер и возвращает информацию о модели.
+
+    :param data: JSON-объект с серийным номером
+    :return: JSON-ответ с результатами анализа
+    """
+    data = request.get_json()
+
+    serial_number = get_serial_number(data)
+
+    model_info = get_model_info_by_serial_number(serial_number)
+
+    return jsonify({"model_info": model_info})
+
+
+
+@app.route('/process_message_for_jira', methods=['POST'])
+def process_message_for_jira():
+    """
+    Получает текст из запроса и обрабатывается моделью.
+
+    Метод принимает POST-запрос с JSON-данными, в которых находится текст обращения,
+     содержащий информацию о проблемах устройств.
+    Возвращает JSON-ответ подходящий под API Jira.
+
+    :param data: JSON-объект с текстом обращения,
+     содержащим информацию о проблемах устройств.
+    :return: JSON-ответ подходящий под API Jira
+    """
+    # Получаем JSON из запроса
+    data = request.get_json()
+
+    failure_point = get_failure_point(data)
+    device_type = get_device_type(data)
+    serial_number = get_serial_number(data)
+
+    isAssigneeTypeValid = (failure_point != '' and device_type != '' and serial_number != '')
+
+    # TODO: сделать так, чтобы данные подтягивались из config.py
+    # Генерируем ответ в указанном формате
+    result = {
+        "name": device_type + ' ' + serial_number,
+        "description": failure_point,
+        "leadUserName": "IMIT_SPC",
+        "assigneeType": "PROJECT_HELPER",  # каким сотрудникам отправлять
+        "isAssigneeTypeValid": isAssigneeTypeValid,
+        "project": "SILA",
+        "projectId": 10000
+    }
+    return jsonify(result), 200
 
 
 if __name__ == '__main__':
