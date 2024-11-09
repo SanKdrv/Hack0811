@@ -4,7 +4,7 @@ from .classifiers.nemo_clf import NemoClf
 
 def get_serial_number(text: str) -> str | None:
     reg_extractor = RegularExtractor()
-    # e = DeviceAnalysis()
+    # e = NemoClf()
     return reg_extractor.get_serial_number(text)
 
 

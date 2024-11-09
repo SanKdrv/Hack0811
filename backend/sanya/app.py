@@ -4,7 +4,7 @@ import io
 import csv
 import json
 
-from backend.classifiers.nemo_clf import NemoClf
+from ...backend.classifiers.nemo_clf import NemoClf
 
 app = Flask(__name__)
 
