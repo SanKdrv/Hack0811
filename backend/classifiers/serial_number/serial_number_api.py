@@ -30,9 +30,9 @@ class SerialNumberAPI:
 
         # Если задан log_level, настроим логирование
         if log_level:
-            self.setup_logging(log_level)
+            self._setup_logging(log_level)
 
-    def setup_logging(self, log_level):
+    def _setup_logging(self, log_level):
         """
         Настроить логирование для записи сообщений в файл и вывод в консоль.
 
@@ -56,7 +56,7 @@ class SerialNumberAPI:
         )
         logging.info(f"Логирование настроено с уровнем: {logging.getLevelName(log_level)}")
 
-    def get_model_by_serial(self, serial_number, retries=0):
+    def get_model_by_serial(self, serial_number: str, retries=0) -> str | None:
         """
         Получить информацию о модели по серийному номеру с учетом повторных попыток в случае ошибок.
 
