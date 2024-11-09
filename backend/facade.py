@@ -2,8 +2,8 @@ from classifiers.serial_number.regular_extractor import RegularExtractor
 from classifiers.nemo_clf import NemoClf
 from classifiers.serial_number.serial_number_api import SerialNumberAPI
 from classifiers.equipment_type.lemma_classifier import EquipmentDetector
-
 from classifiers.answers_noramalizer import AnswerNormalizer, NormTypes
+
 
 def get_serial_number(text: str) -> str:
     """
@@ -28,6 +28,7 @@ def get_failure_point(text: str) -> str:
     failure_point = classifier.get_failure_point(text)
     return AnswerNormalizer.normalize(failure_point, norm_type=NormTypes.Failure) # можно поэксперименитровать с поргом
 
+
 def get_device_type(text: str) -> str:
     """
     Принимает исходный текст. Извлекает тип оборудования и возвращает его,
@@ -39,7 +40,6 @@ def get_device_type(text: str) -> str:
     # classifier = NemoClf()
     device_type = classifier.get_device_type(text)
     return AnswerNormalizer.normalize(device_type, norm_type=NormTypes.Equipment) # можно поэксперименитровать с поргом
-
 
 
 def get_model_info_by_serial_number(serial_number: str) -> dict | None:
