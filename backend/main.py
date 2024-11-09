@@ -8,7 +8,7 @@ import json
 import pandas as pd
 
 # from ..backend.classifiers.nemo_clf import NemoClf
-from .facade import get_failure_point, get_device_type, get_serial_number, get_model_info_by_serial_number
+from Hack0811.backend.facade import get_failure_point, get_device_type, get_serial_number, get_model_info_by_serial_number
 from Hack0811.config import TEMPLATES_DIR
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=TEMPLATES_DIR, static_url_path="")
 
