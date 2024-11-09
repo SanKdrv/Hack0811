@@ -22,7 +22,7 @@ class EquipmentDetector:
         """
         self._equipment_keywords = ["сервер", "ноутбук", "схд"]  # Ключевые леммы для идентификации оборудования
 
-    def get_device_type(self, text: str) -> str | None:
+    def get_device_type(self, text: str) -> str:
         """
         Метод для обнаружения упоминания оборудования в тексте.
 
@@ -54,7 +54,7 @@ class EquipmentDetector:
                 return token.lemma_.capitalize()  # Возвращаем найденное оборудование, если совпадение найдено
 
         # Возвращаем None, если в тексте не обнаружено упоминаний оборудования
-        return None
+        return "Уточнить"
 
 
 # Пример использования класса EquipmentDetector
