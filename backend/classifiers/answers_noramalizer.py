@@ -27,6 +27,7 @@ class AnswerNormalizer:
         :return: Строка с наиболее подходящим каноническим ответом.
         """
         # Используем fuzzywuzzy для нахождения наилучшего совпадения
+        best_match = None
         if norm_type == NormTypes.Equipment:
             best_match, score = process.extractOne(ai_answer, AnswerNormalizer._eq_types, scorer=fuzz.ratio)
         elif norm_type == NormTypes.Failure:
