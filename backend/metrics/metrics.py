@@ -6,6 +6,12 @@ from Hack0811.backend.facade import get_device_type, get_failure_point, get_seri
 
 # Основная функция для обработки данных из CSV и вычисления F1 метрики
 def process_csv_and_calculate_f1(csv_file: str):
+    """
+    Высчитывает и строит график метрики f1-score для типа оборудования, точки отказа и серийного номера по отдельности.
+    :param csv_file: Путь до файла csv с шапкой "index,Тема,Описание,Тип оборудования,Точка отказа,Серийный номер",
+     данные из которого будут использоваться для сравнения.
+    :return:
+    """
     # Загружаем CSV файл
     df = pd.read_csv(csv_file)
 
