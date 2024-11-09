@@ -1,7 +1,7 @@
-from backend.classifiers.serial_number.regular_extractor import RegularExtractor
-from .classifiers.nemo_clf import NemoClf
-from .classifiers.serial_number.serial_number_api import SerialNumberAPI
-from .classifiers.equipment_type.lemma_classifier import EquipmentDetector
+from classifiers.serial_number.regular_extractor import RegularExtractor
+from classifiers.nemo_clf import NemoClf
+from classifiers.serial_number.serial_number_api import SerialNumberAPI
+from classifiers.equipment_type.lemma_classifier import EquipmentDetector
 
 
 def get_serial_number(text: str) -> str:
