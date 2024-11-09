@@ -93,6 +93,10 @@ def get_model_info(data):
     """
     Получает серийный номер и возвращает информацию о модели.
 
+    Структура возвращаемого значения:
+    {'success': 1, 'msg': 'Гарантия найдена', 'Number': 'C223012430', 'Model': 'НК2-1404',
+    'ServiceDesk': 17, 'Warrantydue': '2027-02-09', 'WarrantyType': 'Базовая', 'FormattedWarantyDue': '09.02.2027'}
+
     :param data: JSON-объект с серийным номером
     :return: JSON-ответ с результатами анализа
     """
