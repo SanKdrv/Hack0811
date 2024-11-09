@@ -1,14 +1,16 @@
 import re
+from clf_interface import SerialNumberClassifierInterface
 
-class SerialNumberExtractor:
+
+class SerialNumberExtractor(SerialNumberClassifierInterface):
     def __init__(self):
         # Задание карты замены для русских букв на латинские
-        self.replacement_map = {
+        self._replacement_map = {
             'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K', 'М': 'M', 'Н': 'H', 'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T', 'У': 'Y',
             'Х': 'X'
         }
 
-    def normalize_text(self, text):
+    def _normalize_text(self, text):
         """
         Приводит текст к верхнему регистру и заменяет русские буквы на латинские аналоги.
 
@@ -19,26 +21,27 @@ class SerialNumberExtractor:
         text = text.upper()
 
         # Заменяем русские буквы на латинские
-        for rus, eng in self.replacement_map.items():
+        for rus, eng in self._replacement_map.items():
             text = text.replace(rus, eng).replace(rus.lower(), eng.lower())
 
         return text
 
-    def extract_serial_number(self, text):
+    def extract_serial_number_from_text(self, text: str) -> str | None:
         """
-        Извлекает серийный номер из текста.
+        Извлекает первый серийный номер из текста.
 
-        Серийный номер должен содержать от 1 до 6 букв, за которыми следуют от 9 до 12 цифр.
+        Серийный номер следующего шаблона: [A-Za-z]{1,6}[0-9]{9,12}
 
         :param text: Входной текст
-        :return: Список найденных серийных номеров
+        :return: Первый найденный серийный номер или None, если не найден
         """
         # Приводим текст к нормализованному виду
-        normalized_text = self.normalize_text(text)
+        normalized_text = self._normalize_text(text)
 
         # Шаблон для поиска серийных номеров
         pattern = r'[A-Za-z]{1,6}[0-9]{9,12}'
         # Находим все совпадения
         matches = re.findall(pattern, normalized_text)
-
-        return matches
+        if matches:
+            return matches[0]
+        return None
