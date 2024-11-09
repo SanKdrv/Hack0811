@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, request, jsonify, render_template, make_response, send_file
 import io
 import csv
@@ -7,7 +8,7 @@ import json
 import pandas as pd
 
 # from ..backend.classifiers.nemo_clf import NemoClf
-from facade import get_failure_point, get_device_type, get_serial_number, get_model_info_by_serial_number
+from .facade import get_failure_point, get_device_type, get_serial_number, get_model_info_by_serial_number
 from Hack0811.config import TEMPLATES_DIR
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=TEMPLATES_DIR, static_url_path="")
 
@@ -157,3 +158,4 @@ def process_message_for_jira():
 
 if __name__ == '__main__':
     app.run()
+
