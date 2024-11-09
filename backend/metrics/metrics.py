@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.metrics import precision_recall_fscore_support
 import matplotlib.pyplot as plt
-from ..facade import get_device_type, get_failure_point, get_serial_number  # Импортируем фасад
+from Hack0811.backend.facade import get_device_type, get_failure_point, get_serial_number  # Импортируем фасад
 
 
 # Основная функция для обработки данных из CSV и вычисления F1 метрики

@@ -1,5 +1,5 @@
 import re
-from clf_interface import SerialNumberClassifierInterface
+from .clf_interface import SerialNumberClassifierInterface
 
 
 class RegularExtractor(SerialNumberClassifierInterface):

@@ -1,4 +1,4 @@
-from .classifiers.serial_number.regular_extractor import RegularExtractor
+from Hack0811.backend.classifiers.serial_number.regular_extractor import RegularExtractor
 from .classifiers.nemo_clf import NemoClf
 
 
