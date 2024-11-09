@@ -3,10 +3,6 @@ document.getElementById("messageInputTheme").addEventListener("keydown", functio
 document.getElementById("messageInputText").addEventListener("keydown", function (event) { if (event.key === "Enter") sendMessage(); });
 
 
-var loc = window.location.pathname;
-var dir = loc.substring(0, loc.lastIndexOf('/'));
-console.log(dir);
-
 function checkEnter(event) {
     if (event.key === "Enter") {
         sendMessage();
