@@ -93,10 +93,6 @@ Hack0811
 
    `python backend/main.py`
 
-    Для FastAPI:
-    
-    `uvicorn backend.api:app --reload`
-
 
 5. Откройте в браузере http://127.0.0.1:8000 для взаимодействия с API и фронтендом.
 
