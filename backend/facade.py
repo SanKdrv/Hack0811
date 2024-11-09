@@ -39,7 +39,7 @@ def get_device_type(text: str) -> str:
     classifier = EquipmentDetector()
     # classifier = NemoClf()
     device_type = classifier.get_device_type(text)
-    return AnswerNormalizer.normalize(device_type, norm_type=NormTypes.Equipment) # можно поэксперименитровать с поргом
+    return AnswerNormalizer.normalize(device_type, norm_type=NormTypes.Equipment)  # можно поэксперименитровать с поргом
 
 
 def get_model_info_by_serial_number(serial_number: str) -> dict | None:
