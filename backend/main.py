@@ -51,7 +51,6 @@ def receive_from_server(data):
                     "serial_number": serial_number})
 
 
-# TODO: fix
 @app.route('/process_csv', methods=['POST', 'GET'])
 def process_csv():
     """
@@ -157,7 +156,6 @@ def process_message_for_jira():
 
     isAssigneeTypeValid = (failure_point != '' and device_type != '' and serial_number != '')
 
-    # TODO: сделать так, чтобы данные подтягивались из config.py
     # Генерируем ответ в указанном формате
     result = {
         "name": device_type + ' ' + serial_number,

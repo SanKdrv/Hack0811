@@ -88,14 +88,19 @@ Hack0811
 
     `pip install -r requirements.txt`
 
-4. Запустите сервер:
+4. Установите приложение LM Studio:
+   https://releases.lmstudio.ai/win32/x86/0.3.5/2/LM-Studio-0.3.5-Setup.exe
+
+5. Установите LLM:
+    https://huggingface.co/bartowski/Vikhr-Nemo-12B-Instruct-R-21-09-24-GGUF/resolve/main/Vikhr-Nemo-12B-Instruct-R-21-09-24-Q4_0.gguf?download=true
+6. Откройте LM Studio и выберите установленную LLM.
+7. Во вкладке developer выберите модель и нажмите кнопку Start.
+8. Запустите сервер:
 
    Для Flask:
 
    `python backend/main.py`
-
-
-5. Откройте в браузере http://127.0.0.1:8000 для взаимодействия с API и фронтендом.
+9. Откройте в браузере http://127.0.0.1:8000 для взаимодействия с API и фронтендом.
 
 ## Преимущества
 

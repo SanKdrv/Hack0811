@@ -74,25 +74,28 @@ def process_csv_and_calculate_f1_2(csv_file: str):
     pred_failure_points = []
     pred_serial_numbers = []
 
-    with open('E:\\contest\\Hackaton0811\\Hackaton\\Hack0811\\backend\\files\\submission.csv', newline='') as csvfile:
-        result = csv.writer(csvfile, delimiter=' ',
+    with open('E:\\contest\\Hackaton0811\\Hackaton\\Hack0811\\backend\\files\\submission.csv', mode='w', newline='', encoding='utf-8') as csvfile:
+        result = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        result.writerow(['index','Тип оборудования','Точка отказа','Серийный номер'])
     # Обрабатываем каждую строку в CSV
         for index, row in df.iterrows():
             # Предсказания от нейронной сети
-
-            pred_type = get_device_type(row['Тема'] + ' ' + row['Описание'])
-            pred_failure_point = get_failure_point(row['Тема'] + ' ' + row['Описание'])
-            pred_serial_number = get_serial_number(row['Тема'] + ' ' + row['Описание'])
+            theme = str(row['Тема'])
+            desc = str(row['Описание'])
+            ind = str(row['index'])
+            pred_type = get_device_type(theme + ' ' + desc)
+            pred_failure_point = get_failure_point(theme + ' ' + desc)
+            pred_serial_number = get_serial_number(theme + ' ' + desc)
             pred_types.append(pred_type)
             pred_failure_points.append(pred_failure_point)
             pred_serial_numbers.append(pred_serial_number)
-            result.writerow([row['index']] + [pred_type] + [pred_failure_point] + [pred_serial_number])
+            print([ind, pred_type, pred_failure_point,pred_serial_number])
+            result.writerow([ind, pred_type, pred_failure_point,pred_serial_number])
 
 
     # Строим график
-    categories = ['Тип оборудования	', 'Точка отказа', 'Серийный номер']
-
+    categories = ['Тип оборудования  ', 'Точка отказа', 'Серийный номер']
 
 
 if __name__ == '__main__':
