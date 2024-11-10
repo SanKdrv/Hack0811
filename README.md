@@ -57,6 +57,7 @@ Hack0811
 ## Технологии и библиотеки
 
 - Python 3.12+
+- Модель Vikhr-Nemo-12B-Instruct-R-21-09-24-GGUF
 - Flask (для создания API)
 - scikit-learn (для работы с данными)
 - pandas (для работы с данными)
