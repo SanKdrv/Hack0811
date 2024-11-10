@@ -52,44 +52,59 @@ def receive_from_server(data):
 
 
 # TODO: fix
-@app.route('/process_csv', methods=['POST'])
+@app.route('/process_csv', methods=['POST', 'GET'])
 def process_csv():
     """
     Получает csv файл из запроса и обрабатывается моделью.
 
-    Метод принимает POST-запрос с JSON-данными, в которых находится csv-файл,
-     содержащий информацию о проблемах устройств.
-    Возвращает JSON-ответ в котором csv-файл с результатами анализа.
+    Метод принимает POST-запрос с CSV-файлом, содержащим информацию о проблемах устройств.
+    Возвращает JSON-ответ с обработанным CSV-файлом с результатами анализа.
 
-    :param data: JSON-объект с csv файлом, в котором находятся данныме о проблемах устройств
-    :return: JSON-ответ с csv файлом, в котором находятся результатамы анализа
+    :param data: JSON-объект с csv файлом, в котором находятся данные о проблемах устройств
+    :return: JSON-ответ с csv файлом, в котором находятся результаты анализа
     """
     # Получаем CSV-файл из запроса
-    csv_file = request.files['csv_file']
 
     # Читаем CSV-файл в DataFrame pandas
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv('E:\\contest\\Hackaton0811\\Hackaton\\Hack0811\\backend\\files\\train_data.csv')
 
-    # Пробегаем по каждой строке и выводим ячейки
-    processed_data = []
+    # Обработка каждой строки
+    results = []
     for _, row in df.iterrows():
-        processed_row = []
-        for cell in row:
-            processed_row.append(str(cell))
-        processed_data.append(processed_row)
+        tema = row['Тема']
+        description = row['Описание']
+        print(tema + " " + description)
+
+        # Используем функции фасада для получения информации
+        device_type = 'get_device_type(tema + " " + description)'
+        # print('Очень очень плохо')
+        failure_point = 'get_failure_point(tema + " " + description)'
+        # print('Очень плохо')
+        serial_number = 'get_serial_number(tema + " " + description)'
+
+        # Создаем новую строку с результатами
+        processed_row = {
+            'Тема': '',
+            'Описание': '',
+            'Тип оборудования': device_type,
+            'Точка отказа': failure_point,
+            'Серийный номер': serial_number
+        }
+        results.append(processed_row)
 
     # Создаем новый DataFrame с обработанными данными
-    new_df = pd.DataFrame(processed_data, columns=df.columns)
+    processed_df = pd.DataFrame(results)
 
-    # Сохраняем результат обратно в CSV
-    output_buffer = io.StringIO()
-    new_df.to_csv(output_buffer, index=False)
+    # Сохраняем результат в CSV в буфер
+    output_buffer = io.BytesIO()
+    processed_df.to_csv(output_buffer, index=False)
     output_buffer.seek(0)
 
-    # Отправляем ответ клиенту
+    # Отправляем обработанный CSV-файл клиенту
     response = make_response(send_file(output_buffer, mimetype='text/csv'))
     response.headers["Content-Disposition"] = f"attachment; filename=processed_{request.files['csv_file'].filename}"
     return response
+
 
 @app.route('/get_model_info', methods=['POST'])
 def get_model_info():
